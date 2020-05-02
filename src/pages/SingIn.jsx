@@ -62,12 +62,11 @@ class SignIn extends React.Component {
   onSubmit = (e) =>{
     e.preventDefault();
     if (this.validator.allValid()) {
-      alert('You submitted the form and stuff!');
+      console.log(this.state);
     } else {
       this.validator.showMessages();
       this.forceUpdate();
     }
-    console.log(this.state);
   }
   render () {
   const { classes } = this.props;
