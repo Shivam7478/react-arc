@@ -1,3 +1,3 @@
 export * from './Home';
-export * from './SingIn';
-export * from './SignUp';
+export {default as SingIn} from './SingIn';
+export {default as SignUp} from './SignUp';

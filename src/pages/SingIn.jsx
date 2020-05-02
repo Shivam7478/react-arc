@@ -8,26 +8,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import PropTypes from 'prop-types';
+import SimpleReactValidator from 'simple-react-validator';
 
-const useStyles = makeStyles((theme) => ({
+const styles = theme => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -39,18 +28,52 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: '100%',
     marginTop: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+});
 
-export function SignIn() {
-  const classes = useStyles();
+class SignIn extends React.Component {
 
+  constructor() {
+    super();
+    this.validator = new SimpleReactValidator();
+    this.state = {
+      email : '',
+      password: ''
+    }
+  }
+
+  _handleEmailFieldChange = (e) => {
+      this.setState({
+          email: e.target.value
+      })
+  }
+
+  _handlePasswordFieldChange = (e) => {
+    this.setState({
+        password: e.target.value
+    })
+  }
+
+  onSubmit = (e) =>{
+    e.preventDefault();
+    if (this.validator.allValid()) {
+      alert('You submitted the form and stuff!');
+    } else {
+      this.validator.showMessages();
+      this.forceUpdate();
+    }
+    console.log(this.state);
+  }
+  render () {
+  const { classes } = this.props;
+  this.validator.purgeFields();
   return (
+    
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -60,7 +83,7 @@ export function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={this.onSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -71,7 +94,12 @@ export function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            value={this.state.email}
+            onChange={this._handleEmailFieldChange}
           />
+          
+          {this.validator.message('email', this.state.email, 'required|email')}
+
           <TextField
             variant="outlined"
             margin="normal"
@@ -82,7 +110,11 @@ export function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={this.state.password}
+            onChange={this._handlePasswordFieldChange}
           />
+          {this.validator.message('password', this.state.password, 'required')}
+
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -110,9 +142,13 @@ export function SignIn() {
           </Grid>
         </form>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }
+}
+
+SignIn.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SignIn);
