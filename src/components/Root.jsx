@@ -2,9 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import Home from '../pages/Home'
-import SignIn from '../pages/SingIn'
-import SignUp from '../pages/SignUp'
+import {SignUp, SignIn, Home} from '../pages'
 
 
 const Root = ({ store }) => (
